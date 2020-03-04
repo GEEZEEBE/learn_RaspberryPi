@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content = "height = device-height, width = 420, user-scalable = no" /> 
+    <title>WebIOPi | Demo</title>
+    <script type="text/javascript" src="/webiopi.js"></script>
+    <script type="text/javascript">
+    webiopi().ready(function() {
+        var content, button;
+        content = $("#content");
+
+        // you can also create a button which calls a different function for mouse down and up events
+        button = webiopi().createButton("hold", "Moter", mousedown, mouseup);
+        content.append(button);
+
+		// Refresh GPIO buttons
+        // pass true to refresh repeatedly of false to refresh once
+        webiopi().refreshGPIO(true);
+
+    });
+
+    function mousedown() {
+    	alert("mousedown()");
+        webiopi().setFunction(23, OUT);
+        webiopi().digitalWrite(23, 1);
+    }
+
+    function mouseup() {
+        webiopi().setFunction(23, IN);
+        webiopi().digitalWrite(23, 0);
+    }
+
+    function outputSequence() {
+        var sequence = "01010100110011001100101010" // S.O.S. morse code or whatever you want
+        // output sequence on gpio 7 with a 100ms period
+        webiopi().outputSequence(18, 500, sequence, sequenceCallback);
+    }
+
+    function sequenceCallback(gpio, data) {
+        alert("sequence on " + gpio + " finished with " + data);
+    }
+
+    </script>
+    <style type="text/css">
+        button {
+            display: block;
+            margin: 5px 5px 5px 5px;
+            width: 160px;
+            height: 45px;
+            font-size: 24pt;
+            font-weight: bold;
+            color: black;
+        }
+
+/*
+        input[type="range"] {
+            display: block;
+            width: 160px;
+            height: 45px;
+        }
+
+        #gpio7.LOW {
+            background-color: White;
+        }
+
+        #gpio7.HIGH {
+            background-color: Red;
+        }
+*/
+    </style>
+</head>
+<body>
+    <div id="content" align="center"></div>
+</body>
+</html>

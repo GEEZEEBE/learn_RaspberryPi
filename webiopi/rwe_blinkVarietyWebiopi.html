@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content = "height = device-height, width = 420, user-scalable = no" /> 
+    <title>WebIOPi | Demo</title>
+    <script type="text/javascript" src="/webiopi.js"></script>
+    <script type="text/javascript">
+    var pin = 4;
+    webiopi().ready(function() {
+        var content, button;
+        content = $("#content");
+
+        // create a "LED" labeled button for GPIO 7
+        button = webiopi().createGPIOButton(pin, "LED");
+        content.append(button); // append button to content div
+
+        // create a button that output a single pulse
+        button = webiopi().createPulseButton("pulse", "Pulse", pin);
+        content.append(button); // append button to content div
+
+        // create a button which output a bit sequence on GPIO 7 with a 100ms period 
+        button = webiopi().createSequenceButton("sos", "S.O.S 1", pin, 200, "01010100110011001100101010");
+        content.append(button); // append button to content div
+
+        // the previous button will always output the same sequence
+        // you can also create a simple button with your own function 
+        button = webiopi().createButton("sos2", "S.O.S 2", outputSequence);
+        content.append(button); // append button to content div
+
+        // you can also create a button which calls a different function for mouse down and up events
+        button = webiopi().createButton("hold", "Hold", mousedown, mouseup);
+        content.append(button);
+
+		// Refresh GPIO buttons
+        // pass true to refresh repeatedly of false to refresh once
+		webiopi().setFunction(pin, "OUT");
+        webiopi().refreshGPIO(true);
+
+    });
+
+    function mousedown() {
+        webiopi().digitalWrite(pin, 0);
+    }
+
+    function mouseup() {
+        webiopi().digitalWrite(pin, 1);
+    }
+
+    function outputSequence() {
+        var sequence = "01010100110011001100101010" // S.O.S. morse code or whatever you want
+        // output sequence on gpio 7 with a 100ms period
+        webiopi().outputSequence(pin, 500, sequence, sequenceCallback);
+    }
+
+    function sequenceCallback(gpio, data) {
+        alert("sequence on " + gpio + " finished with " + data);
+    }
+
+    </script>
+    <style type="text/css">
+        button {
+            display: block;
+            margin: 5px 5px 5px 5px;
+            width: 160px;
+            height: 45px;
+            font-size: 24pt;
+            font-weight: bold;
+            color: black;
+        }
+
+/*
+        input[type="range"] {
+            display: block;
+            width: 160px;
+            height: 45px;
+        }
+
+        #gpio7.LOW {
+            background-color: White;
+        }
+
+        #gpio7.HIGH {
+            background-color: Red;
+        }
+*/
+    </style>
+</head>
+<body>
+    <div id="content" align="center"></div>
+</body>
+</html>

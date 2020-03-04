@@ -1,0 +1,46 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Raspberry Pi Controller</title>
+      <script type = "text/javascript" 
+         src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script>
+	$(document).ready(function(){
+    	$("#ledOn").change(function(){
+	        if ($(this).is(':checked')) {
+//    	        alert("Click Led On !");
+//         		$("#tdLedOff").hide();
+               $.get( 
+                  "control03.html",
+                  { led: "on" },
+                  function(data) {
+//                     $('#request').html(data);
+                  }
+               );
+	        }
+	    });
+    	$("#ledOff").change(function(){
+	        if ($(this).is(':checked')) {
+               $.get( 
+                  "control03.html",
+                  { led: "off" },
+                  function(data) {
+                  }
+               );
+	        }
+	    });
+	});
+	</script>
+
+</head>
+<body>
+        <table>
+            <tr>
+                <td>LED</td>
+                <td><input id="ledOn" type="radio" name="led" value="On"/>On</td>
+                <td id="tdLedOff"><input id="ledOff" type="radio" name="led" value="Off"/>Off</td> 
+            </tr>
+        </table>
+        <div id="request">request values!</div>
+</body>
+</html>
